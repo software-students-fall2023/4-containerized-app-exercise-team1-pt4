@@ -6,6 +6,11 @@ name = "pypi"
 [packages]
 pylint = "*"
 black = "*"
+deepgram-sdk = "*"
+python-dotenv = "*"
+flask = "*"
+pymongo = "*"
+flask-cors = "*"
 
 [dev-packages]
 

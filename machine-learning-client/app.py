@@ -2,7 +2,7 @@
 
 import json
 import os
-from flask import Flask, jsonify, request, abort, make_response
+from flask import Flask, jsonify, request
 import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -58,3 +58,4 @@ async def transcribe():
             "transcription": transcription,
         }
     )
+

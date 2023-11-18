@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='home.css') }}"
+    />
+    <script
+      src="https://kit.fontawesome.com/eac29ec11e.js"
+      crossorigin="anonymous"
+    ></script>
+
+  </head>
+  <body> 
+    <div class="container">
+      <div class="title-container">
+        <h1> Record a file to be transcribed </h1>
+        <form action="/action_page.php" class="record-input">
+          <button type="submit">
+            <i class="fa-solid fa-microphone fa-4x"></i>
+          </button>
+        </form>
+      </div>
+      <div class="file-upload-container">
+        <label for="file-upload" class="file-upload-input">
+          <i class="fa-solid fa-plus"></i> 
+        </label>
+        <input id="file-upload" type="file"/>
+        <p> Or upload a file </p>
+      </div>
+    </div>
+  </body>
+</html>

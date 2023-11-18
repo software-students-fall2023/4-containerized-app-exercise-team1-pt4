@@ -58,4 +58,3 @@ async def transcribe():
             "transcription": transcription,
         }
     )
-

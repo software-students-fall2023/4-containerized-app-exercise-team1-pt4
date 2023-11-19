@@ -18,11 +18,15 @@
     <div class="container">
       <div class="title-container">
         <h1> Record a file to be transcribed </h1>
-        <form action="/action_page.php" class="record-input">
-          <button type="submit">
-            <i class="fa-solid fa-microphone fa-4x"></i>
+        <div class="record">
+          <button type="submit" class="record" onclick="openPopup()">
+              <i class="fa-solid fa-microphone fa-4x"></i>
           </button>
-        </form>
+        </div>
+        <div class="popup" id="popup">
+          <h2> Record! </h2>
+          <button type="submit" onclick="closePopup()"> Close </button>
+        </div>
       </div>
       <div class="file-upload-container">
         <label for="file-upload" class="file-upload-input">
@@ -31,6 +35,22 @@
         <input id="file-upload" type="file"/>
         <p> Or upload a file </p>
       </div>
+      <div class="history-container" id="history">
+        {% for upload in history %}
+        <a href="{{ url_for('upload', upload_id=upload._id) }}">
+          <strong>{{upload.Name}}</strong>
+        </a>
+        {% endfor %}
+      </div>
     </div>
+    <script>
+      let popup = document.getElementById("popup");
+      function openPopup(){
+        popup.classList.add("open-popup");
+      }
+      function closePopup(){
+        popup.classList.remove("open-popup");
+      }
+    </script>
   </body>
 </html>

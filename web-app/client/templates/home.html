@@ -1,28 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='home.css') }}"
-    />
-    <script
-      src="https://kit.fontawesome.com/eac29ec11e.js"
-      crossorigin="anonymous"
-    ></script>
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}" />
+    <script src="https://kit.fontawesome.com/eac29ec11e.js" crossorigin="anonymous"></script>
   </head>
   <body> 
     <div class="container">
       <div class="title-container">
         <h1> Record a file to be transcribed </h1>
-        <form action="/action_page.php" class="record-input">
-          <button type="submit">
-            <i class="fa-solid fa-microphone fa-4x"></i>
-          </button>
-        </form>
+        <button id="recordButton">
+          <i class="fa-solid fa-microphone fa-4x"></i>
+        </button>
       </div>
       <div class="file-upload-container">
         <label for="file-upload" class="file-upload-input">
@@ -32,5 +22,47 @@
         <p> Or upload a file </p>
       </div>
     </div>
+
+    <script>
+      document.getElementById('recordButton').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+        } else {
+          startRecording();
+        }
+      });
+
+      let mediaRecorder;
+      let audioChunks = [];
+
+      function startRecording() {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(stream => {
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = e => {
+              audioChunks.push(e.data);
+            };
+            mediaRecorder.onstop = sendAudioToServer;
+            mediaRecorder.start();
+          })
+          .catch(e => console.error(e));
+      }
+
+      function sendAudioToServer() {
+        const audioBlob = new Blob(audioChunks, { 'type' : 'audio/wav' });
+        const formData = new FormData();
+        formData.append('audioFile', audioBlob);
+
+        fetch('/upload_audio', {
+          method: 'POST',
+          body: formData
+        }).then(response => {
+          if(response.ok) {
+            console.log('Audio uploaded successfully');
+          }
+        }).catch(e => console.error(e));
+      }
+    </script>
   </body>
 </html>

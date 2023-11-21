@@ -8,7 +8,13 @@ from pymongo.server_api import ServerApi
 load_dotenv()
 uri=os.getenv('URI')
 
+mongo = MongoClient(uri, server_api=ServerApi('1'))
 
+try:
+    mongo.admin.command('ping')
+    print("successfully connected to mongo")
+except Exception as e:
+    print(e)
 
 app = Flask(
     __name__, template_folder="../client/templates", static_folder="../client/static"

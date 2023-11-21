@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
+load_dotenv()
+uri=os.getenv('URI')
+
 
 
 app = Flask(

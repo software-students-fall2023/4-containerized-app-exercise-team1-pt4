@@ -1,5 +1,11 @@
 """Module providing routing."""
 from flask import Flask, render_template
+import os
+from dotenv import load_dotenv
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+
+
 
 app = Flask(
     __name__, template_folder="../client/templates", static_folder="../client/static"

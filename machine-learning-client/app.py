@@ -1,6 +1,5 @@
 """ML Client for handling audio transcription using the Deepgram API."""
 
-import json
 import os
 from flask import Flask, jsonify, request
 import pymongo

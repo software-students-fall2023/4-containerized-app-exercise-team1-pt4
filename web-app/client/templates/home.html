@@ -25,8 +25,15 @@
         </div>
         <div class="popup" id="popup">
           <h2> Record! </h2>
-          <button type="submit" onclick="closePopup()"> Close </button>
-        </div>
+          <div id="buttonContainer">
+              <button type="submit" onclick="startRecording()">Start Recording</button>
+              <button type="submit" onclick="stopRecording()">Stop Recording</button>
+              <button type="submit" onclick="closePopup()">Close</button>
+          </div>
+          <div id="transcriptionContainer" style="display: none;">
+              <p id="transcriptionText"></p>
+          </div>
+      </div>
       </div>
       <div class="file-upload-container">
         <label for="file-upload" class="file-upload-input">
@@ -52,5 +59,53 @@
         popup.classList.remove("open-popup");
       }
     </script>
+    <script>
+      let mediaRecorder;
+      let audioChunks = [];
+      
+      navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(stream => {
+              mediaRecorder = new MediaRecorder(stream);
+              mediaRecorder.ondataavailable = event => {
+                  audioChunks.push(event.data);
+              };
+              mediaRecorder.onstop = () => {
+                  const audioBlob = new Blob(audioChunks);
+                  uploadAudio(audioBlob);
+                  audioChunks = [];
+              };
+          });
+      
+      function startRecording() {
+          audioChunks = [];
+          mediaRecorder.start();
+      }
+      
+      function stopRecording() {
+          mediaRecorder.stop();
+      }
+      
+      function uploadAudio(audioBlob) {
+          const formData = new FormData();
+          formData.append('file', audioBlob, 'audio.wav');
+
+          fetch('http://localhost:5000/api', {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.text())
+          .then(data => {
+              displayTranscription(data);
+          })
+          .catch(error => console.error(error));
+      }
+
+      function displayTranscription(transcription) {
+          document.getElementById('buttonContainer').style.display = 'none';
+          const transcriptionElement = document.getElementById('transcriptionText');
+          transcriptionElement.textContent = transcription; 
+          document.getElementById('transcriptionContainer').style.display = 'block';
+      }
+      </script>
   </body>
 </html>

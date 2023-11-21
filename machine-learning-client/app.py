@@ -9,6 +9,7 @@ from pymongo.server_api import ServerApi
 from deepgram import Deepgram
 from flask_cors import CORS
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 uri = os.getenv("URI")
@@ -31,13 +32,6 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 async def transcribe():
     """Transcribe audio file using Deepgram."""
     files = request.files
-    form = request.form
-    features = form.get("features")
-    model = form.get("model")
-    version = form.get("version")
-    tier = form.get("tier")
-
-    dg_features = json.loads(features)
     dg_request = None
 
     if "file" in files:
@@ -46,16 +40,15 @@ async def transcribe():
         dg_request = {"mimetype": file.mimetype, "buffer": file_content}
 
     if not dg_request:
-        raise ValueError("No file provided for transcription.")
+        return jsonify({"error": "No file provided for transcription"}), 400
 
-    transcription = await deepgram.transcription.prerecorded(dg_request, dg_features)
-
-    return jsonify(
-        {
-            "model": model,
-            "version": version,
-            "tier": tier,
-            "dg_features": dg_features,
-            "transcription": transcription,
-        }
-    )
+    try:
+        transcription = await deepgram.transcription.prerecorded(
+            dg_request, {'smart_format': True, 'model': 'nova-2',}
+        )
+        transcript = transcription["results"]["channels"][0]["alternatives"][0]["transcript"]
+        return jsonify({"data": transcript})
+    except requests.ConnectionError:
+        print("Connection error: Unable to connect to Deepgram API.")
+    except requests.Timeout:
+        print("Timeout error: The Deepgram API did not respond in time.")

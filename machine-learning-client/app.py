@@ -43,9 +43,15 @@ async def transcribe():
 
     try:
         transcription = await deepgram.transcription.prerecorded(
-            dg_request, {'smart_format': True, 'model': 'nova-2',}
+            dg_request,
+            {
+                "smart_format": True,
+                "model": "nova-2",
+            },
         )
-        transcript = transcription["results"]["channels"][0]["alternatives"][0]["transcript"]
+        transcript = transcription["results"]["channels"][0]["alternatives"][0][
+            "transcript"
+        ]
         return jsonify({"data": transcript})
     except requests.ConnectionError:
         print("Connection error: Unable to connect to Deepgram API.")

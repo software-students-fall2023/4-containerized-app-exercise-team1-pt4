@@ -1,5 +1,5 @@
 """Module providing routing."""
-from flask import Flask, render_template
+from flask import Flask, render_template, request, flash, redirect
 import os
 from dotenv import load_dotenv
 from pymongo.mongo_client import MongoClient
@@ -24,6 +24,22 @@ app = Flask(
 @app.route("/")
 def home():
     return render_template("home.html")
+
+@app.route("/upload", methods=['POST'])
+def upload():
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file = request.files['file']
+
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(request.url)
+    
+    res='x'
+
+    transcriptions = mongo.db.transcripts
+    transcriptions.insert_one({'name': file.filename, 'transcript': res})
 
 
 if __name__ == "__main__":

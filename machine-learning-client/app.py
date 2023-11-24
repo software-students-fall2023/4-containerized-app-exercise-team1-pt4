@@ -9,7 +9,6 @@ from deepgram import Deepgram
 from flask_cors import CORS
 from dotenv import load_dotenv
 import requests
-import requests
 
 load_dotenv()
 uri = os.getenv("URI")
@@ -58,13 +57,11 @@ async def transcribe():
     except requests.Timeout:
         print("Timeout error: The Deepgram API did not respond in time.")
 
-    transcription = await deepgram.transcription.prerecorded(dg_request, dg_features)
-
     save = {
-        "model": model,
-        "version": version,
-        "tier": tier,
-        "dg_features": dg_features,
+        # "model": model,
+        # "version": version,
+        # "tier": tier,
+        # "dg_features": dg_features,
         "transcription": transcript,
     }
 

@@ -41,7 +41,6 @@ async def transcribe():
 
     if not dg_request:
         raise ValueError("No file provided for transcription.")
-    
 
     try:
         transcription = await deepgram.transcription.prerecorded(
@@ -61,7 +60,7 @@ async def transcribe():
 
     transcription = await deepgram.transcription.prerecorded(dg_request, dg_features)
 
-    save={
+    save = {
         "model": model,
         "version": version,
         "tier": tier,
@@ -72,6 +71,7 @@ async def transcribe():
     mongo.db.transcriptions.insert_one(save)
 
     return jsonify(save)
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

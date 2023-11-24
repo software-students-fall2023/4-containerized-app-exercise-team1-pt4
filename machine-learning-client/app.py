@@ -1,6 +1,5 @@
 """ML Client for handling audio transcription using the Deepgram API."""
 
-import json
 import os
 from flask import Flask, jsonify, request
 import pymongo
@@ -9,6 +8,7 @@ from pymongo.server_api import ServerApi
 from deepgram import Deepgram
 from flask_cors import CORS
 from dotenv import load_dotenv
+import requests
 import requests
 
 load_dotenv()
@@ -32,13 +32,6 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 async def transcribe():
     """Transcribe audio file using Deepgram."""
     files = request.files
-    form = request.form
-    features = form.get("features")
-    model = form.get("model")
-    version = form.get("version")
-    tier = form.get("tier")
-
-    dg_features = json.loads(features)
     dg_request = None
 
     if "file" in files:

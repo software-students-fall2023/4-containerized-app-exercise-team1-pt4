@@ -50,15 +50,17 @@ async def transcribe():
 
     transcription = await deepgram.transcription.prerecorded(dg_request, dg_features)
 
-    return jsonify(
-        {
-            "model": model,
-            "version": version,
-            "tier": tier,
-            "dg_features": dg_features,
-            "transcription": transcription,
-        }
-    )
+    save={
+        "model": model,
+        "version": version,
+        "tier": tier,
+        "dg_features": dg_features,
+        "transcription": transcription,
+    }
+
+    mongo.db.transcriptions.insert_one(save)
+
+    return jsonify(save)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

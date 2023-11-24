@@ -1,7 +1,6 @@
 """Module providing routing."""
-from flask import Flask, render_template, request, flash, redirect, jsonify
 import os
-from dotenv import load_dotenv
+from flask import Flask, render_template, request, flash, redirect, jsonify
 import requests
 
 app = Flask(
@@ -13,11 +12,13 @@ app.config["uploads"] = "./uploads"
 
 @app.route("/")
 def home():
+    """Render home page."""
     return render_template("home.html")
 
 
 @app.route("/transcribe", methods=["POST"])
 def upload():
+    """Upload file and send to API."""
     if "file" not in request.files:
         flash("No file part")
         return redirect(request.url)
@@ -33,21 +34,20 @@ def upload():
         "http://localhost:5000/api",
         data=file.read(),
         headers={"Content-Type": file.content_type},
+        timeout=20,
     )
 
     if res.status_code == 200:
         return res.json()
-    else:
-        return (
-            jsonify(
-                {
-                    "error": "Something went wrong while trying to transcribe. Please try again."
-                }
-            ),
-            res.status_code,
-        )
 
+    return (
+        jsonify(
+            {
+                "error": "Something went wrong while trying to transcribe. Please try again."
+            }
+        ),
+        res.status_code,
+    )
 
 if __name__ == "__main__":
-    """Function to run app if it's run as a script."""
     app.run(debug=True, port=3000)

@@ -2,19 +2,6 @@
 from flask import Flask, render_template, request, flash, redirect
 import os
 from dotenv import load_dotenv
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
-
-load_dotenv()
-uri=os.getenv('URI')
-
-mongo = MongoClient(uri, server_api=ServerApi('1'))
-
-try:
-    mongo.admin.command('ping')
-    print("successfully connected to mongo")
-except Exception as e:
-    print(e)
 
 app = Flask(
     __name__, template_folder="../client/templates", static_folder="../client/static"
@@ -39,13 +26,6 @@ def upload():
         return redirect(request.url)
     
     file.save(os.path.join(app.config['uploads'], file.filename))
-
-    
-    
-    res='x'
-
-    transcriptions = mongo.db.transcripts
-    transcriptions.insert_one({'name': file.filename, 'transcript': res})
 
 
 if __name__ == "__main__":

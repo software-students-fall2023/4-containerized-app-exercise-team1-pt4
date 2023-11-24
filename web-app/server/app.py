@@ -20,6 +20,8 @@ app = Flask(
     __name__, template_folder="../client/templates", static_folder="../client/static"
 )
 
+app.config['uploads'] = './uploads'
+
 
 @app.route("/")
 def home():
@@ -35,6 +37,10 @@ def upload():
     if file.filename == '':
         flash('No selected file')
         return redirect(request.url)
+    
+    file.save(os.path.join(app.config['uploads'], file.filename))
+
+    
     
     res='x'
 

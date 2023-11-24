@@ -10,22 +10,10 @@ from deepgram import Deepgram
 from flask_cors import CORS
 from dotenv import load_dotenv
 
-load_dotenv()
-uri = os.getenv("URI")
-
 deepgram = Deepgram(os.environ.get("DEEPGRAM_API_KEY"))
-
-mongo = MongoClient(uri, server_api=ServerApi("1"))
-
-try:
-    mongo.admin.command("ping")
-    print("Successfully connected to MongoDB.")
-except pymongo.errors.ConnectionFailure as e:
-    print(f"MongoDB connection failed: {e}")
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-
 
 @app.route("/api", methods=["POST"])
 async def transcribe():

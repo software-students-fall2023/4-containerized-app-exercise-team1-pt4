@@ -9,6 +9,7 @@ from pymongo.server_api import ServerApi
 from deepgram import Deepgram
 from flask_cors import CORS
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 uri = os.getenv("URI")
@@ -47,6 +48,23 @@ async def transcribe():
 
     if not dg_request:
         raise ValueError("No file provided for transcription.")
+    
+
+    try:
+        transcription = await deepgram.transcription.prerecorded(
+            dg_request,
+            {
+                "smart_format": True,
+                "model": "nova-2",
+            },
+        )
+        transcript = transcription["results"]["channels"][0]["alternatives"][0][
+            "transcript"
+        ]
+    except requests.ConnectionError:
+        print("Connection error: Unable to connect to Deepgram API.")
+    except requests.Timeout:
+        print("Timeout error: The Deepgram API did not respond in time.")
 
     transcription = await deepgram.transcription.prerecorded(dg_request, dg_features)
 
@@ -55,7 +73,7 @@ async def transcribe():
         "version": version,
         "tier": tier,
         "dg_features": dg_features,
-        "transcription": transcription,
+        "transcription": transcript,
     }
 
     mongo.db.transcriptions.insert_one(save)

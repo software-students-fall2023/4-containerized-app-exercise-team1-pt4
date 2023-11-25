@@ -39,7 +39,7 @@ async def transcribe():
         dg_request = {"mimetype": file.mimetype, "buffer": file_content}
 
     if not dg_request:
-        return jsonify({"error": "No file provided for transcription"}), 400
+        raise ValueError("No file provided for transcription.")
 
     try:
         transcription = await deepgram.transcription.prerecorded(
@@ -52,8 +52,23 @@ async def transcribe():
         transcript = transcription["results"]["channels"][0]["alternatives"][0][
             "transcript"
         ]
-        return jsonify({"data": transcript})
     except requests.ConnectionError:
         print("Connection error: Unable to connect to Deepgram API.")
     except requests.Timeout:
         print("Timeout error: The Deepgram API did not respond in time.")
+
+    save = {
+        # "model": model,
+        # "version": version,
+        # "tier": tier,
+        # "dg_features": dg_features,
+        "transcription": transcript,
+    }
+
+    mongo.db.transcriptions.insert_one(save)
+
+    return jsonify(save)
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)

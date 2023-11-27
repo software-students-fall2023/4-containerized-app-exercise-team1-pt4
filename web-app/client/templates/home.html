@@ -25,11 +25,15 @@
         </div>
         <div class="popup" id="popup">
           <h2> Record! </h2>
-          <div id="buttonContainer">
-              <button type="submit" onclick="startRecording()">Start Recording</button>
-              <button type="submit" onclick="stopRecording()">Stop Recording</button>
-              <button type="submit" onclick="closePopup()">Close</button>
+          <div class="button-container" id="buttonContainer">
+              <button id="popup-record" type="submit" onclick="startRecording()">
+                <i class="fa-solid fa-microphone"></i>
+              </button>
+              <button type="submit" onclick="stopRecording()">
+                <i class="fa-solid fa-square"></i>
+              </button>
           </div>
+          <button type="submit" onclick="closePopup()">Close</button>
           <div id="transcriptionContainer" style="display: none;">
               <p id="transcriptionText"></p>
           </div>
@@ -52,13 +56,27 @@
     </div>
     <script>
       let popup = document.getElementById("popup");
+      const btn = document.getElementById("popup-record");
+
       function openPopup(){
         popup.classList.add("open-popup");
       }
       function closePopup(){
         popup.classList.remove("open-popup");
       }
+
+      let index = 0;
+
+      const colors = ['red', '#5C8374'];
+
+      btn.addEventListener('click', function onClick(){
+        btn.style.backgroundColor = colors[index]
+
+        index = index >= colors.length - 1 ? 0 : index + 1;
+      });
+
     </script>
+
     <script>
       let mediaRecorder;
       let audioChunks = [];

@@ -20,10 +20,8 @@ mongo = MongoClient(uri, server_api=ServerApi("1"))
 try:
     mongo.admin.command("ping")
     print("Successfully connected to MongoDB.")
-except (
-    pymongo.errors.ConnectionFailure
-) as conn_failure:  
-    print(f"MongoDB connection failed: {conn_failure}")
+except pymongo.errors.ConnectionFailure as e:
+    print(f"MongoDB connection failed: {e}")
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -32,34 +30,18 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 @app.route("/api", methods=["POST"])
 async def transcribe():
     """Transcribe audio file using Deepgram."""
-    try:
-        files = request.files
-        if "file" not in files:
-            return jsonify({"error": "No file provided"}), 400
+    files = request.files
+    dg_request = None
 
+    if "file" in files:
         file = files.get("file")
         file_content = file.read()
-
-        # Check if the mimetype is a valid audio type
-        valid_audio_mimetypes = [
-            "audio/mp3",
-            "audio/mp4",
-            "audio/mpeg",
-            "audio/aac",
-            "audio/wav",
-            "audio/flac",
-            "audio/pcm",
-            "audio/x-m4a",
-            "audio/ogg",
-            "audio/opus",
-            "audio/webm",
-        ]
-
-        if file.mimetype not in valid_audio_mimetypes:
-            return jsonify({"error": "Invalid file type"}), 400
-
         dg_request = {"mimetype": file.mimetype, "buffer": file_content}
 
+    if not dg_request:
+        raise ValueError("No file provided for transcription.")
+
+    try:
         transcription = await deepgram.transcription.prerecorded(
             dg_request,
             {
@@ -70,30 +52,22 @@ async def transcribe():
         transcript = transcription["results"]["channels"][0]["alternatives"][0][
             "transcript"
         ]
-
-        save = {"transcription": transcript}
-        mongo.db.transcriptions.insert_one(save)
-
-        return jsonify(save)
-
-    except ValueError as value_error:  
-        return jsonify({"error": str(value_error)}), 400
     except requests.ConnectionError:
-        return jsonify({"error": "Unable to connect to Deepgram API"}), 500
+        print("Connection error: Unable to connect to Deepgram API.")
     except requests.Timeout:
-        return jsonify({"error": "Timeout error with Deepgram API"}), 500
-    except (
-        requests.HTTPError
-    ) as http_error:  
-        if http_error.response and http_error.response.status_code == 500:
-            return jsonify({"error": "Deepgram API internal server error"}), 500
-        
-        return (
-            jsonify({"error": "An error occurred with the Deepgram API"}),
-            http_error.response.status_code,
-        )
-    except Exception:  # pylint: disable=broad-except
-        return jsonify({"error": "An error occurred"}), 500
+        print("Timeout error: The Deepgram API did not respond in time.")
+
+    save = {
+        # "model": model,
+        # "version": version,
+        # "tier": tier,
+        # "dg_features": dg_features,
+        "transcription": transcript,
+    }
+
+    mongo.db.transcriptions.insert_one(save)
+
+    return jsonify(save)
 
 
 if __name__ == "__main__":

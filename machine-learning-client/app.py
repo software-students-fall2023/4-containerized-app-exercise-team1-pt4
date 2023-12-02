@@ -65,7 +65,7 @@ async def transcribe():
 
     mongo.db.transcriptions.insert_one(save)
 
-    return json.loads(json_util.dumps(save))
+    return transcript
 
 
 if __name__ == "__main__":

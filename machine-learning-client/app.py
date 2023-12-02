@@ -1,7 +1,7 @@
 """ML Client for handling audio transcription using the Deepgram API."""
 
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, request
 import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -58,16 +58,12 @@ async def transcribe():
         print("Timeout error: The Deepgram API did not respond in time.")
 
     save = {
-        # "model": model,
-        # "version": version,
-        # "tier": tier,
-        # "dg_features": dg_features,
         "transcription": transcript,
     }
 
     mongo.db.transcriptions.insert_one(save)
 
-    return jsonify(save)
+    return transcript
 
 
 if __name__ == "__main__":

@@ -8,6 +8,8 @@ from pymongo.server_api import ServerApi
 from deepgram import Deepgram
 from flask_cors import CORS
 from dotenv import load_dotenv
+from bson import json_util
+import json
 import requests
 
 load_dotenv()
@@ -67,7 +69,7 @@ async def transcribe():
 
     mongo.db.transcriptions.insert_one(save)
 
-    return jsonify(save)
+    return json.loads(json_util.dumps(save))
 
 
 if __name__ == "__main__":

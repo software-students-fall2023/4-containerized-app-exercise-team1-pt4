@@ -60,10 +60,6 @@ async def transcribe():
         print("Timeout error: The Deepgram API did not respond in time.")
 
     save = {
-        # "model": model,
-        # "version": version,
-        # "tier": tier,
-        # "dg_features": dg_features,
         "transcription": transcript,
     }
 

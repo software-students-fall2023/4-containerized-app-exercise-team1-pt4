@@ -1,15 +1,13 @@
 """ML Client for handling audio transcription using the Deepgram API."""
 
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, request
 import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from deepgram import Deepgram
 from flask_cors import CORS
 from dotenv import load_dotenv
-from bson import json_util
-import json
 import requests
 
 load_dotenv()

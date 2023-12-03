@@ -1,23 +1,23 @@
 """Module providing routing."""
 import os
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, flash, redirect, jsonify
 import requests
 import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from dotenv import load_dotenv
 
 load_dotenv()
-uri = os.getenv("URI")
+uri=os.getenv('URI')
 
-mongo = MongoClient(uri, server_api=ServerApi("1"))
+mongo = MongoClient(uri, server_api=ServerApi('1'))
 
 try:
-    mongo.admin.command("ping")
-    print("Successfully connected to MongoDB.")
-except pymongo.errors.ConnectionFailure as e:
-    print(f"MongoDB connection failed: {e}")
-    
+    mongo.admin.command('ping')
+    print("successfully connected to mongo")
+except Exception as e:
+    print(e)
+
 
 app = Flask(
     __name__, template_folder="../client/templates", static_folder="../client/static"
@@ -29,6 +29,7 @@ app.config["uploads"] = "./uploads"
 @app.route("/")
 def home():
     """Render home page."""
+    
     transcriptions = list(mongo.db.transcriptions.find())
     
     return render_template("home.html", transcriptions=transcriptions)
@@ -69,4 +70,6 @@ def upload():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000)
+    app.run(debug=True, port=3000)
+
+

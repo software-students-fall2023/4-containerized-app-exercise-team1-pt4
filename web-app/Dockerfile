@@ -1,5 +1,5 @@
 FROM python:3.10-alpine
-WORKDIR /server
+WORKDIR /usr/src/app
 RUN pip install pipenv
 COPY ../Pipfile* ../Pipfile.lock ./
 RUN pipenv install --system --deploy --ignore-pipfile

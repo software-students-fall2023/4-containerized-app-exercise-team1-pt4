@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+
+  machine-learning-client:
+    build:
+      context: .
+      dockerfile: machine-learning-client/Dockerfile
+      volumes:
+        - ./machine-learning-client:/usr/src/app
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env

@@ -8,12 +8,12 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
 load_dotenv()
-uri=os.getenv('URI')
+uri = os.getenv("URI")
 
-mongo = MongoClient(uri, server_api=ServerApi('1'))
+mongo = MongoClient(uri, server_api=ServerApi("1"))
 
 try:
-    mongo.admin.command('ping')
+    mongo.admin.command("ping")
     print("successfully connected to mongo")
 except Exception as e:
     print(e)
@@ -29,9 +29,9 @@ app.config["uploads"] = "./uploads"
 @app.route("/")
 def home():
     """Render home page."""
-    
+
     transcriptions = list(mongo.db.transcriptions.find())
-    
+
     return render_template("home.html", transcriptions=transcriptions)
 
 
@@ -71,5 +71,3 @@ def upload():
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000)
-
-

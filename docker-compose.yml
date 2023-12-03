@@ -12,3 +12,14 @@ services:
       - "5000:5000"
     env_file:
       - .env
+
+  web-app:
+    build:
+      context: .
+      dockerfile: web-app/Dockerfile
+      volumes:
+        - ./web-app:/usr/src/app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env

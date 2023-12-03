@@ -29,7 +29,7 @@
               <button id="popup-record" type="submit" onclick="startRecording()">
                 <i class="fa-solid fa-microphone"></i>
               </button>
-              <button type="submit" onclick="stopRecording()">
+              <button id="popup-stop" type="submit" onclick="stopRecording()">
                 <i class="fa-solid fa-square"></i>
               </button>
           </div>
@@ -47,16 +47,15 @@
         <p> Or upload a file </p>
       </div>
       <div class="history-container" id="history">
-        {% for upload in history %}
-        <a href="{{ url_for('upload', upload_id=upload._id) }}">
-          <strong>{{upload.Name}}</strong>
-        </a>
+        {% for transcription in transcriptions %}
+          <p>{{transcription.transcription}}</p>
         {% endfor %}
       </div>
     </div>
     <script>
       let popup = document.getElementById("popup");
-      const btn = document.getElementById("popup-record");
+      const recordBtn = document.getElementById("popup-record");
+      const stopBtn = document.getElementById("popup-stop")
 
       function openPopup(){
         popup.classList.add("open-popup");
@@ -65,14 +64,12 @@
         popup.classList.remove("open-popup");
       }
 
-      let index = 0;
+      recordBtn.addEventListener('click', function onClick(){
+        recordBtn.style.backgroundColor = "red";
+      });
 
-      const colors = ['red', '#5C8374'];
-
-      btn.addEventListener('click', function onClick(){
-        btn.style.backgroundColor = colors[index]
-
-        index = index >= colors.length - 1 ? 0 : index + 1;
+      stopBtn.addEventListener('click', function onClick(){
+        stopBtn.style.backgroundColor = "#5C8374";
       });
 
     </script>

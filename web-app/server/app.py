@@ -2,6 +2,22 @@
 import os
 from flask import Flask, render_template, request, flash, redirect, jsonify
 import requests
+import pymongo
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+from dotenv import load_dotenv
+
+load_dotenv()
+uri = os.getenv("URI")
+
+mongo = MongoClient(uri, server_api=ServerApi("1"))
+
+try:
+    mongo.admin.command("ping")
+    print("Successfully connected to MongoDB.")
+except pymongo.errors.ConnectionFailure as e:
+    print(f"MongoDB connection failed: {e}")
+    
 
 app = Flask(
     __name__, template_folder="../client/templates", static_folder="../client/static"

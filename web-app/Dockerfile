@@ -1,8 +1,7 @@
 FROM python:3.10-alpine
 WORKDIR /usr/src/app
-RUN pip install pipenv
-COPY Pipfile Pipfile.lock ./
-RUN pipenv install --system --deploy
-COPY web-app .
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+COPY web-app/ ./
 EXPOSE 3000
-CMD ["pipenv", "run", "python", "./server/app.py"]
+CMD ["python", "./server/app.py"]

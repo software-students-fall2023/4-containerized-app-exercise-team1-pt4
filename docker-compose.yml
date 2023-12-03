@@ -6,8 +6,6 @@ services:
     build:
       context: .
       dockerfile: machine-learning-client/Dockerfile
-    volumes:
-      - ./machine-learning-client:/usr/src/app
     ports:
       - "5000:5000"
     env_file:
@@ -17,8 +15,6 @@ services:
     build:
       context: .
       dockerfile: web-app/Dockerfile
-    volumes:
-      - ./web-app:/usr/src/app
     ports:
       - "3000:3000"
     env_file:

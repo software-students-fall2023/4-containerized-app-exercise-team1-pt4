@@ -29,7 +29,9 @@ app.config["uploads"] = "./uploads"
 @app.route("/")
 def home():
     """Render home page."""
-    return render_template("home.html")
+    transcriptions = list(mongo.db.transcriptions.find())
+    
+    return render_template("home.html", transcriptions=transcriptions)
 
 
 @app.route("/transcribe", methods=["POST"])

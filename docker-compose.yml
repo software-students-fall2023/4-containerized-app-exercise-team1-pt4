@@ -7,9 +7,11 @@ services:
       context: .
       dockerfile: machine-learning-client/Dockerfile
     ports:
-      - "5000:5000"
+      - "3001:3001"
     env_file:
       - .env
+    depends_on:
+      - mongo
 
   web-app:
     build:
@@ -19,3 +21,21 @@ services:
       - "3000:3000"
     env_file:
       - .env
+    depends_on:
+      - mongo
+  
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+    env_file:
+      - .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME="team"
+      - MONGO_INITDB_ROOT_PASSWORD="cv2pFmOSHP6"
+      - MONGO_INITDB_DATABASE="db"
+    # command: mongod --auth --port 27017
+volumes:
+  data:

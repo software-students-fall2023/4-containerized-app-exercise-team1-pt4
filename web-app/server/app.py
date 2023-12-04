@@ -8,14 +8,15 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
 load_dotenv()
-uri = os.getenv("URI")
+uri = f"""mongodb://{os.environ['MONGO_INITDB_ROOT_USERNAME']}:
+{os.environ['MONGO_INITDB_ROOT_PASSWORD']}@mongo:27017/db?authSource=admin"""
 
 mongo = MongoClient(uri, server_api=ServerApi("1"))
 
 try:
     mongo.admin.command("ping")
     print("successfully connected to mongo")
-except Exception as e:
+except pymongo.errors.ConnectionFailure as e:
     print(e)
 
 
@@ -50,7 +51,7 @@ def upload():
     file.save(os.path.join(app.config["uploads"], file.filename))
     # or temp api url
     res = requests.post(
-        "http://localhost:5000/api",
+        "http://localhost:30001/api",
         data=file.read(),
         headers={"Content-Type": file.content_type},
         timeout=20,
@@ -70,4 +71,4 @@ def upload():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3000)
+    app.run(host="0.0.0.0", port=3000)

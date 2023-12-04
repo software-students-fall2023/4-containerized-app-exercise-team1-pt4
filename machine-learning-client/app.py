@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 import requests
 
 load_dotenv()
-uri = os.getenv("URI")
+uri = f"""mongodb://{os.environ['MONGO_INITDB_ROOT_USERNAME']}:
+{os.environ['MONGO_INITDB_ROOT_PASSWORD']}@mongo:27017/db?authSource=admin"""
 
 deepgram = Deepgram(os.environ.get("DEEPGRAM_API_KEY"))
 
@@ -67,4 +68,4 @@ async def transcribe():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=3001)

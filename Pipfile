@@ -12,6 +12,7 @@ pymongo = "*"
 flask-cors = "*"
 requests = "*"
 flask = {extras = ["async"], version = "*"}
+pytest = "*"
 
 [dev-packages]
 

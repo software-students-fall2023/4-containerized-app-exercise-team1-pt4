@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1c15898554b46da051ec06466bdd9e68a23a5e6d88d3340585d114c7a23a1b6e"
+            "sha256": "25ca5b5c14bdce66477201f754ee90ed0ca6710ab2d60fd542286bcb85fcbee9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -282,14 +282,6 @@
             "markers": "python_version >= '3.7'",
             "version": "==8.1.7"
         },
-        "colorama": {
-            "hashes": [
-                "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44",
-                "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
-            ],
-            "markers": "sys_platform == 'win32'",
-            "version": "==0.4.6"
-        },
         "deepgram-sdk": {
             "hashes": [
                 "sha256:04d69f821c6b27789578102e237d451b026d5d78e980cd1a7ea365ca7ef58b8f",
@@ -313,6 +305,14 @@
             ],
             "markers": "python_version >= '3.8' and python_version < '4.0'",
             "version": "==2.4.2"
+        },
+        "exceptiongroup": {
+            "hashes": [
+                "sha256:4bfd3996ac73b41e9b9628b04e079f193850720ea5945fc96a08633c66912f14",
+                "sha256:91f5c769735f051a4290d52edd0858999b57e5876e9f85937691bd4c9fa3ed68"
+            ],
+            "markers": "python_version < '3.11'",
+            "version": "==1.2.0"
         },
         "flask": {
             "extras": [
@@ -408,13 +408,13 @@
             "markers": "python_version >= '3.5'",
             "version": "==3.6"
         },
-        "importlib-metadata": {
+        "iniconfig": {
             "hashes": [
-                "sha256:1c8dc6839ddc9771412596926f24cb5a553bbd40624ee2c7e55e531542bed3b8",
-                "sha256:e8acb523c335a91822674e149b46c0399ec4d328c4d1f6e49c273da5ff0201b9"
+                "sha256:2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3",
+                "sha256:b6a85871a79d2e3b22d2d1b94ac2824226a63c6b741c88f7ae975f18b6778374"
             ],
-            "markers": "python_version < '3.10'",
-            "version": "==6.9.0"
+            "markers": "python_version >= '3.7'",
+            "version": "==2.0.0"
         },
         "isort": {
             "hashes": [
@@ -626,6 +626,14 @@
             "markers": "python_version >= '3.7'",
             "version": "==4.0.0"
         },
+        "pluggy": {
+            "hashes": [
+                "sha256:cf61ae8f126ac6f7c451172cf30e3e43d3ca77615509771b3a984a0730651e12",
+                "sha256:d89c696a773f8bd377d18e5ecda92b7a3793cbe66c87060a6fb58c7b6e1061f7"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==1.3.0"
+        },
         "pylint": {
             "hashes": [
                 "sha256:0d4c286ef6d2f66c8bfb527a7f8a629009e42c99707dec821a03e1b51a4c1496",
@@ -722,6 +730,15 @@
             "index": "pypi",
             "markers": "python_version >= '3.7'",
             "version": "==4.6.1"
+        },
+        "pytest": {
+            "hashes": [
+                "sha256:0d009c083ea859a71b76adf7c1d502e4bc170b80a8ef002da5806527b9591fac",
+                "sha256:d989d136982de4e3b29dabcc838ad581c64e8ed52c11fbe86ddebd9da0818cd5"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==7.4.3"
         },
         "python-dotenv": {
             "hashes": [
@@ -954,14 +971,6 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==1.9.3"
-        },
-        "zipp": {
-            "hashes": [
-                "sha256:0e923e726174922dce09c53c59ad483ff7bbb8e572e00c7f7c46b88556409f31",
-                "sha256:84e64a1c28cf7e91ed2078bb8cc8c259cb19b76942096c8d7b84947690cabaf0"
-            ],
-            "markers": "python_version >= '3.8'",
-            "version": "==3.17.0"
         }
     },
     "develop": {}

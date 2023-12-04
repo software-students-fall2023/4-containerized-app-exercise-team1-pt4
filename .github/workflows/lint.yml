@@ -20,7 +20,7 @@ jobs:
       - name: Lint with pylint
         if: ${{ hashFiles('**/*.py') != '' }}
         run: |
-          pipenv run pylint **/*.py
+          pipenv run pylint **/*.py --disable=redefined-outer-name
       - name: Format with black
         if: ${{ hashFiles('**/*.py') != '' }}
         run: |

@@ -8,7 +8,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
 load_dotenv()
-uri = os.getenv("URI")
+uri = f"mongodb://{os.getenv('MONGO_INITDB_ROOT_USERNAME')}:{os.getenv('MONGO_INITDB_ROOT_PASSWORD')}@mongo:27017/{os.getenv('MONGO_INITDB_DATABASE')}"
 
 mongo = MongoClient(uri, server_api=ServerApi("1"))
 

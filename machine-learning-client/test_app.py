@@ -13,7 +13,7 @@ with patch("deepgram.Deepgram"):
 
 
 @pytest.fixture
-def client():
+def client_fixture():
     """Yields a test client for the Flask app."""
     app.config["TESTING"] = True
     with app.test_client() as test_client:
@@ -36,10 +36,10 @@ def test_successful_transcription(client):
             response = client.post(
                 "/api", data=data, content_type="multipart/form-data"
             )
+
             assert mock_insert.called
             assert response.status_code == 200
-            assert "transcription" in response.json
-            assert response.json["transcription"] == "Test transcript"
+            assert response.data.decode() == "Test transcript"
 
 
 def test_transcription_with_no_file(client):
@@ -60,10 +60,10 @@ def test_deepgram_valid_response_no_transcript(client):
             response = client.post(
                 "/api", data=data, content_type="multipart/form-data"
             )
+
             assert mock_insert.called
             assert response.status_code == 200
-            assert "transcription" in response.json
-            assert response.json["transcription"] == ""
+            assert response.data.decode() == ""
 
 
 def test_transcription_with_invalid_file_type(client):
@@ -82,10 +82,10 @@ def test_transcription_with_invalid_file_type(client):
             response = client.post(
                 "/api", data=data, content_type="multipart/form-data"
             )
+
             assert mock_insert.called
             assert response.status_code == 200
-            assert "transcription" in response.json
-            assert response.json["transcription"] == "Valid transcription"
+            assert response.data.decode() == "Valid transcription"
 
 
 def test_transcription_with_empty_audio_file(client):
@@ -102,6 +102,6 @@ def test_transcription_with_empty_audio_file(client):
             response = client.post(
                 "/api", data=data, content_type="multipart/form-data"
             )
+
             assert response.status_code == 200
-            assert "transcription" in response.json
-            assert response.json["transcription"] == ""
+            assert response.data.decode() == ""

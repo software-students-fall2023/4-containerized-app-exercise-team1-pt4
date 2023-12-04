@@ -1,0 +1,59 @@
+name: CI/CD Workflow
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    env:
+      DEEPGRAM_API_KEY: ${{secrets.DEEPGRAM_API_KEY}}
+      MONGO_INITDB_ROOT_USERNAME: ${{secrets.MONGO_INITDB_ROOT_USERNAME}}
+      MONGO_INITDB_ROOT_PASSWORD: ${{secrets.MONGO_INITDB_ROOT_PASSWORD}}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run pytest for web-app
+      run: |
+        pytest web-app
+
+    - name: Run pytest for machine-learning-client
+      run: |
+        pytest machine-learning-client
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event.pull_request.merged == true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: verse1
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    - name: Build and push web-app Docker image
+      run: |
+        docker build -t verse1/web-app:latest ./web-app
+        docker push verse1/web-app:latest
+
+    - name: Build and push machine-learning-client Docker image
+      run: |
+        docker build -t verse1/machine-learning-client:latest ./machine-learning-client
+        docker push verse1/machine-learning-client:latest

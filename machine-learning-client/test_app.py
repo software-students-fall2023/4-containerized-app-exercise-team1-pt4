@@ -13,7 +13,7 @@ with patch("deepgram.Deepgram"):
 
 
 @pytest.fixture
-def client():
+def client_fixture():
     """Yields a test client for the Flask app."""
     app.config["TESTING"] = True
     with app.test_client() as test_client:

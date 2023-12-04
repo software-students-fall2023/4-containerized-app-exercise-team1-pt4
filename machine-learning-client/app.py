@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 import requests
 
 load_dotenv()
-uri = "mongodb://mongo:27017/db"
+uri = f"mongodb://{os.environ['MONGO_INITDB_ROOT_USERNAME']}:{os.environ['MONGO_INITDB_ROOT_PASSWORD']}@mongo:27017/db?authSource=admin"
 
 deepgram = Deepgram(os.environ.get("DEEPGRAM_API_KEY"))
 

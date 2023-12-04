@@ -32,5 +32,10 @@ services:
       - ./data:/data/db
     env_file:
       - .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME="team"
+      - MONGO_INITDB_ROOT_PASSWORD="cv2pFmOSHP6"
+      - MONGO_INITDB_DATABASE="db"
+    # command: mongod --auth --port 27017
 volumes:
   data:

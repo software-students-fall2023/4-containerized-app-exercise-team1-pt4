@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='home.css') }}"
+    />
+    <script
+      src="https://kit.fontawesome.com/eac29ec11e.js"
+      crossorigin="anonymous"
+    ></script>
+
+  </head>
+  <body> 
+    <div class="container">
+      <div class="title-container">
+        <h1> Record a file to be transcribed </h1>
+        <div class="record">
+          <button type="submit" class="record" onclick="openPopup()">
+              <i class="fa-solid fa-microphone fa-4x"></i>
+          </button>
+        </div>
+        <div class="popup" id="popup">
+          <h2> Record! </h2>
+          <div class="button-container" id="buttonContainer">
+              <button id="popup-record" type="submit" onclick="startRecording()">
+                <i class="fa-solid fa-microphone"></i>
+              </button>
+              <button id="popup-stop" type="submit" onclick="stopRecording()">
+                <i class="fa-solid fa-square"></i>
+              </button>
+          </div>
+          <button type="submit" onclick="closePopup()">Close</button>
+          <div id="transcriptionContainer" style="display: none;">
+              <p id="transcriptionText"></p>
+          </div>
+        </div>
+      </div>
+      <div class="history-container" id="history">
+        {% for transcription in transcriptions %}
+          <p>{{transcription.transcription}}</p>
+        {% endfor %}
+      </div>
+    </div>
+    <script>
+      let popup = document.getElementById("popup");
+      const recordBtn = document.getElementById("popup-record");
+      const stopBtn = document.getElementById("popup-stop")
+
+      function openPopup(){
+        popup.classList.add("open-popup");
+      }
+      function closePopup(){
+        popup.classList.remove("open-popup");
+      }
+
+      recordBtn.addEventListener('click', function onClick(){
+        recordBtn.style.backgroundColor = "red";
+      });
+
+      stopBtn.addEventListener('click', function onClick(){
+        recordBtn.style.backgroundColor = "#5C8374";
+      });
+
+    </script>
+
+    <script>
+      let mediaRecorder;
+      let audioChunks = [];
+      
+      navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(stream => {
+              mediaRecorder = new MediaRecorder(stream);
+              mediaRecorder.ondataavailable = event => {
+                  audioChunks.push(event.data);
+              };
+              mediaRecorder.onstop = () => {
+                  const audioBlob = new Blob(audioChunks);
+                  uploadAudio(audioBlob);
+                  audioChunks = [];
+              };
+          });
+      
+      function startRecording() {
+          audioChunks = [];
+          mediaRecorder.start();
+      }
+      
+      function stopRecording() {
+          mediaRecorder.stop();
+      }
+      
+      function uploadAudio(audioBlob) {
+          const formData = new FormData();
+          formData.append('file', audioBlob, 'audio.wav');
+
+          fetch('http://localhost:3001/api', {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.text())
+          .then(data => {
+              displayTranscription(data);
+          })
+          .catch(error => console.error(error));
+      }
+
+      function displayTranscription(transcription) {
+          document.getElementById('buttonContainer').style.display = 'none';
+          const transcriptionElement = document.getElementById('transcriptionText');
+          transcriptionElement.textContent = transcription; 
+          document.getElementById('transcriptionContainer').style.display = 'block';
+      }
+      </script>
+  </body>
+</html>

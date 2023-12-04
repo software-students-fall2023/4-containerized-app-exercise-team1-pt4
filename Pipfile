@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pylint = "*"
+black = "*"
+deepgram-sdk = "*"
+python-dotenv = "*"
+pymongo = "*"
+flask-cors = "*"
+requests = "*"
+flask = {extras = ["async"], version = "*"}
+pytest = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"

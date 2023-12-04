@@ -79,4 +79,3 @@ def test_upload_with_actual_file_part_no_filename(client_fixture):
     data = {"file": (BytesIO(b"audio data"), "")}
     response = client_fixture.post("/transcribe", data=data)
     assert response.status_code == 302
-

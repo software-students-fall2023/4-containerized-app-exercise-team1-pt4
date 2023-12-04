@@ -8,7 +8,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
 load_dotenv()
-uri = f"mongodb://{os.getenv('MONGO_INITDB_ROOT_USERNAME')}:{os.getenv('MONGO_INITDB_ROOT_PASSWORD')}@mongo:27017/{os.getenv('MONGO_INITDB_DATABASE')}"
+uri = "mongodb://mongo:27017/db"
 
 mongo = MongoClient(uri, server_api=ServerApi("1"))
 
@@ -30,9 +30,9 @@ app.config["uploads"] = "./uploads"
 def home():
     """Render home page."""
 
-    transcriptions = list(mongo.db.transcriptions.find())
+    # transcriptions = list(mongo.db.transcriptions.find())
 
-    return render_template("home.html", transcriptions=transcriptions)
+    return render_template("home.html")
 
 
 @app.route("/transcribe", methods=["POST"])
@@ -70,4 +70,4 @@ def upload():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3000)
+    app.run(host="0.0.0.0", port=3000)

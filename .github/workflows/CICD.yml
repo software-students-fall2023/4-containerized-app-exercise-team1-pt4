@@ -31,6 +31,28 @@ jobs:
       run: |
         pytest web-app
 
-    - name: Run pytest for machine-learning
+    - name: Run pytest for machine-learning-client
       run: |
         pytest machine-learning-client
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: verse1
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    - name: Build and push web-app Docker image
+      run: |
+        docker build -t verse1/web-app:latest ./web-app
+        docker push verse1/web-app:latest
+
+    - name: Build and push machine-learning-client Docker image
+      run: |
+        docker build -t verse1/machine-learning-client:latest ./machine-learning-client
+        docker push verse1/machine-learning-client:latest

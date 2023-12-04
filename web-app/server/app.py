@@ -50,7 +50,7 @@ def upload():
     file.save(os.path.join(app.config["uploads"], file.filename))
     # or temp api url
     res = requests.post(
-        "http://localhost:5000/api",
+        "http://localhost:30001/api",
         data=file.read(),
         headers={"Content-Type": file.content_type},
         timeout=20,

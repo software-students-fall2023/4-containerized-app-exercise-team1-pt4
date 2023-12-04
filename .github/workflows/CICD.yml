@@ -1,12 +1,15 @@
 name: CI/CD Workflow
 
 on:
-  push:
-    branches: [ main ]
+  pull_request:
+    types: [closed]
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
 
     steps:
     - uses: actions/checkout@v2

@@ -20,7 +20,7 @@ def client_fixture():
         yield test_client
 
 
-def test_successful_transcription(client):
+def test_successful_transcription(client_fixture):
     """Tests successful audio transcription."""
     mock_deepgram_response = AsyncMock(
         return_value={
@@ -33,7 +33,7 @@ def test_successful_transcription(client):
     with patch("app.deepgram.transcription.prerecorded", new=mock_deepgram_response):
         with patch("pymongo.collection.Collection.insert_one") as mock_insert:
             data = {"file": (io.BytesIO(b"audio data"), "audio.mp3")}
-            response = client.post(
+            response = client_fixture.post(
                 "/api", data=data, content_type="multipart/form-data"
             )
 
@@ -42,13 +42,13 @@ def test_successful_transcription(client):
             assert response.data.decode() == "Test transcript"
 
 
-def test_transcription_with_no_file(client):
+def test_transcription_with_no_file(client_fixture):
     """Tests handling of transcription request with no file provided."""
     with pytest.raises(ValueError, match="No file provided for transcription."):
-        client.post("/api", data={}, content_type="multipart/form-data")
+        client_fixture.post("/api", data={}, content_type="multipart/form-data")
 
 
-def test_deepgram_valid_response_no_transcript(client):
+def test_deepgram_valid_response_no_transcript(client_fixture):
     """Tests handling of valid Deepgram response with no transcript."""
     mock_deepgram_response = AsyncMock(
         return_value={"results": {"channels": [{"alternatives": [{"transcript": ""}]}]}}
@@ -57,7 +57,7 @@ def test_deepgram_valid_response_no_transcript(client):
     with patch("app.deepgram.transcription.prerecorded", new=mock_deepgram_response):
         with patch("pymongo.collection.Collection.insert_one") as mock_insert:
             data = {"file": (io.BytesIO(b"audio data"), "audio.mp3")}
-            response = client.post(
+            response = client_fixture.post(
                 "/api", data=data, content_type="multipart/form-data"
             )
 
@@ -66,7 +66,7 @@ def test_deepgram_valid_response_no_transcript(client):
             assert response.data.decode() == ""
 
 
-def test_transcription_with_invalid_file_type(client):
+def test_transcription_with_invalid_file_type(client_fixture):
     """Tests transcription handling with an invalid file type."""
     mock_deepgram_response = AsyncMock(
         return_value={
@@ -79,7 +79,7 @@ def test_transcription_with_invalid_file_type(client):
     with patch("app.deepgram.transcription.prerecorded", new=mock_deepgram_response):
         with patch("pymongo.collection.Collection.insert_one") as mock_insert:
             data = {"file": (io.BytesIO(b"Not an audio file"), "invalid_file.txt")}
-            response = client.post(
+            response = client_fixture.post(
                 "/api", data=data, content_type="multipart/form-data"
             )
 
@@ -88,7 +88,7 @@ def test_transcription_with_invalid_file_type(client):
             assert response.data.decode() == "Valid transcription"
 
 
-def test_transcription_with_empty_audio_file(client):
+def test_transcription_with_empty_audio_file(client_fixture):
     """Tests transcription handling with an empty audio file."""
     mock_deepgram_response = AsyncMock(
         return_value={"results": {"channels": [{"alternatives": [{"transcript": ""}]}]}}
@@ -99,7 +99,7 @@ def test_transcription_with_empty_audio_file(client):
             "app.deepgram.transcription.prerecorded", new=mock_deepgram_response
         ):
             data = {"file": (io.BytesIO(b""), "audio.mp3")}
-            response = client.post(
+            response = client_fixture.post(
                 "/api", data=data, content_type="multipart/form-data"
             )
 

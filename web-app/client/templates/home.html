@@ -38,14 +38,6 @@
               <p id="transcriptionText"></p>
           </div>
       </div>
-      </div>
-      <div class="file-upload-container">
-        <label for="file-upload" class="file-upload-input">
-          <i class="fa-solid fa-plus"></i> 
-        </label>
-        <input id="file-upload" type="file"/>
-        <p> Or upload a file </p>
-      </div>
       <div class="history-container" id="history">
         {% for transcription in transcriptions %}
           <p>{{transcription.transcription}}</p>

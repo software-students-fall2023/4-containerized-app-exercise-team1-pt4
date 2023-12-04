@@ -33,7 +33,9 @@ def test_successful_transcription(client):
     with patch("app.deepgram.transcription.prerecorded", new=mock_deepgram_response):
         with patch("pymongo.collection.Collection.insert_one") as mock_insert:
             data = {"file": (io.BytesIO(b"audio data"), "audio.mp3")}
-            response = client.post("/api", data=data, content_type="multipart/form-data")
+            response = client.post(
+                "/api", data=data, content_type="multipart/form-data"
+            )
 
             assert mock_insert.called
             assert response.status_code == 200
@@ -55,7 +57,9 @@ def test_deepgram_valid_response_no_transcript(client):
     with patch("app.deepgram.transcription.prerecorded", new=mock_deepgram_response):
         with patch("pymongo.collection.Collection.insert_one") as mock_insert:
             data = {"file": (io.BytesIO(b"audio data"), "audio.mp3")}
-            response = client.post("/api", data=data, content_type="multipart/form-data")
+            response = client.post(
+                "/api", data=data, content_type="multipart/form-data"
+            )
 
             assert mock_insert.called
             assert response.status_code == 200
@@ -75,7 +79,9 @@ def test_transcription_with_invalid_file_type(client):
     with patch("app.deepgram.transcription.prerecorded", new=mock_deepgram_response):
         with patch("pymongo.collection.Collection.insert_one") as mock_insert:
             data = {"file": (io.BytesIO(b"Not an audio file"), "invalid_file.txt")}
-            response = client.post("/api", data=data, content_type="multipart/form-data")
+            response = client.post(
+                "/api", data=data, content_type="multipart/form-data"
+            )
 
             assert mock_insert.called
             assert response.status_code == 200
@@ -89,9 +95,13 @@ def test_transcription_with_empty_audio_file(client):
     )
 
     with patch("pymongo.collection.Collection.insert_one"):
-        with patch("app.deepgram.transcription.prerecorded", new=mock_deepgram_response):
+        with patch(
+            "app.deepgram.transcription.prerecorded", new=mock_deepgram_response
+        ):
             data = {"file": (io.BytesIO(b""), "audio.mp3")}
-            response = client.post("/api", data=data, content_type="multipart/form-data")
+            response = client.post(
+                "/api", data=data, content_type="multipart/form-data"
+            )
 
             assert response.status_code == 200
             assert response.data.decode() == ""

@@ -2,13 +2,14 @@ name: CI/CD Workflow
 
 on:
   pull_request:
+    types: [closed]
     branches:
-      - master
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     env:
       DEEPGRAM_API_KEY: ${{secrets.DEEPGRAM_API_KEY}}
       MONGO_INITDB_ROOT_USERNAME: ${{secrets.MONGO_INITDB_ROOT_USERNAME}}
@@ -36,7 +37,8 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    # if: github.event.pull_request.merged == true
+    needs: test
+    if: github.event.pull_request.merged == true
     steps:
     - uses: actions/checkout@v2
 
